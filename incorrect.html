@@ -18,7 +18,7 @@
             --snow-white: #FFFEFA;
             --deep-green: #2C5F4E;
             --gold-accent: #D4AF37;
-            --berry-red: #A0393F;
+            --berry-red: #8B262B; /* 少し落ち着いた赤に変更 */
         }
 
         body {
@@ -27,7 +27,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #3d1a1a 0%, #5a2c2c 50%, #3d1a1a 100%);
+            /* 背景の赤みを抑えるため、より暗いトーンのグラデーションに修正 */
+            background: linear-gradient(135deg, #1a0a0a 0%, #2e1414 50%, #1a0a0a 100%);
             position: relative;
             overflow: hidden;
         }
@@ -39,14 +40,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.3;
+            /* 画像の赤みを抑えるため、透過度をさらに下げました */
+            opacity: 0.12; 
             z-index: 0;
         }
 
         .snowflake {
             position: absolute;
             top: -10px;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.2);
             font-size: 1.5em;
             animation: fall linear infinite;
             pointer-events: none;
@@ -54,9 +56,7 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-            }
+            to { transform: translateY(100vh) rotate(360deg); }
         }
 
         .container {
@@ -68,38 +68,32 @@
         }
 
         @keyframes shakeIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.8) rotate(-5deg);
-            }
-            50% {
-                transform: scale(1.05) rotate(2deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0);
-            }
+            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
         }
 
-        /* --- 修正済み：極限透過ラッパー --- */
+        /* --- 修正済み：枠内の赤みを抜いてクリアにする設定 --- */
         .result-wrapper {
             background: transparent; 
             padding: 50px 60px;
             border-radius: 30px; 
             box-shadow: 
-                0 15px 45px 0 rgba(0, 0, 0, 0.15), 
+                0 20px 50px 0 rgba(0, 0, 0, 0.3), 
                 inset 0 0 80px 0 rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(2px) brightness(1.12);
-            -webkit-backdrop-filter: blur(2px) brightness(1.12);
+            
+            /* saturate(0.6) で枠内だけ赤みを40%カットし、クリアに見せています */
+            backdrop-filter: blur(3px) brightness(1.2) saturate(0.6);
+            -webkit-backdrop-filter: blur(3px) brightness(1.2) saturate(0.6);
+            
             position: relative;
-            overflow: hidden; /* はみ出し防止 */
-            isolation: isolate; /* 重なり順の整理 */
-            -webkit-mask-image: -webkit-radial-gradient(white, black); /* Safariの角丸バグ対策 */
+            overflow: hidden;
+            isolation: isolate;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
             max-width: 600px;
             border: none;
         }
 
-        /* --- 修正済み：上部の色付きバー --- */
         .result-wrapper::before {
             content: '';
             position: absolute;
@@ -116,19 +110,13 @@
         .icon {
             font-size: 3.5em;
             margin-bottom: 20px;
-            animation: swing 1s ease-in-out;
-        }
-
-        @keyframes swing {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-15deg); }
-            75% { transform: rotate(15deg); }
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
         }
 
         .title {
             font-family: 'Playfair Display', serif;
             font-size: 2.2em;
-            color: var(--berry-red);
+            color: #e6b4b7; /* タイトルも少し柔らかい色にして赤みを軽減 */
             margin-bottom: 15px;
             font-weight: 700;
             letter-spacing: 2px;
@@ -136,19 +124,13 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message {
             font-size: 1.2em;
-            color: rgba(255, 255, 250, 0.9); /* 可読性のために少し明るく調整 */
+            color: rgba(255, 255, 250, 0.9);
             line-height: 1.8;
             margin-top: 15px;
             animation: fadeInUp 0.8s ease 0.5s both;
@@ -157,7 +139,7 @@
         .encouragement {
             margin-top: 20px;
             font-size: 1.1em;
-            color: var(--berry-red);
+            color: var(--gold-accent); /* 赤の強調を抑えるためゴールドに変更 */
             font-weight: 600;
             animation: fadeInUp 0.8s ease 0.7s both;
         }
@@ -185,38 +167,37 @@
         .retry-button {
             color: var(--snow-white);
             background: var(--berry-red);
+            box-shadow: 0 4px 15px rgba(139, 38, 43, 0.3);
         }
 
         .retry-button:hover {
-            background: #8a2f35;
+            background: #a0393f;
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(160, 57, 63, 0.3);
+            box-shadow: 0 10px 25px rgba(139, 38, 43, 0.4);
         }
 
         .hint-button {
-            color: var(--deep-green);
+            color: #1a0a0a;
             background: var(--gold-accent);
         }
 
         .hint-button:hover {
-            background: #c09d2e;
+            background: #eecd5d;
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
         }
 
         .hint-box {
             margin-top: 30px;
             padding: 20px 30px;
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--gold-accent);
             border-radius: 10px;
             display: none;
             animation: slideDown 0.4s ease;
         }
 
-        .hint-box.show {
-            display: block;
-        }
+        .hint-box.show { display: block; }
 
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
@@ -225,23 +206,20 @@
 
         .hint-text {
             font-size: 1.1em;
-            color: var(--snow-white); /* 背景に合わせて白系に変更 */
+            color: var(--snow-white);
             font-style: italic;
         }
 
         @media (max-width: 768px) {
             .result-wrapper { padding: 35px 30px; }
-            .title { font-size: 1.8em; }
-            .message { font-size: 1.05em; }
             .buttons { flex-direction: column; align-items: center; }
             .button { width: 100%; max-width: 220px; }
         }
     </style>
 </head>
 <body>
-
     <img src="IMG_021239.JPG" alt="" class="background-image">
-    
+
     <div class="container">
         <div class="result-wrapper">
             <div class="icon">🎄</div>
@@ -273,7 +251,7 @@
         function createSnowflakes() {
             const snowflakes = ['❄', '❅', '❆'];
             const container = document.body;
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const snowflake = document.createElement('div');
                 snowflake.className = 'snowflake';
                 snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
